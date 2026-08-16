@@ -1,0 +1,21 @@
+# Governance-critical paths. Combined with a Ruleset that requires code-owner
+# review, this is what stops "delete the workflow" from being a valid bypass.
+#
+# Copy into .github/CODEOWNERS (or the repo root) and set the ruleset to
+# "Require review from Code Owners" on the protected branches.
+
+# The verification workflow itself
+/.github/workflows/governance-verify.yml   @shashiladev-heshan
+
+# Anything else that runs in CI can be used to fake a passing check
+/.github/workflows/                        @shashiladev-heshan
+/.github/CODEOWNERS                        @shashiladev-heshan
+
+# Registry pin, tier and policy overrides
+/governance.json                           @shashiladev-heshan
+
+# Synced governance content — normally only changed by `govctl sync`
+/.governance/                              @shashiladev-heshan
+
+# Hook configuration (advisory layer, but changing it is a signal worth reviewing)
+/lefthook.yml                              @shashiladev-heshan

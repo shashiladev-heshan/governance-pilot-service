@@ -1,0 +1,7 @@
+{
+  "name": "governance-pilot-service",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": { "prepare": "lefthook install" },
+  "devDependencies": { "lefthook": "^2.1.10" }
+}

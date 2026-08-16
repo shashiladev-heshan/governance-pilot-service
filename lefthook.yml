@@ -1,0 +1,25 @@
+# Managed by govctl. Local hooks are ADVISORY — the authoritative governance
+# gate is the required GitHub workflow (governance-verify.yml).
+#
+# govctl is called directly, not via npx: npx would fetch and execute an
+# unscoped `govctl` package from the public registry on any machine that does
+# not have it installed.
+pre-commit:
+  parallel: true
+  commands:
+    governance:
+      run: govctl verify
+      fail_text: "govctl verify failed — see the output above. If content drifted: govctl restore"
+
+# No eslint or prettier config found in this project, so no eslint/prettier hook
+# was generated. Once configured, add (note the .governance exclude):
+#
+#    lint:
+#      glob: "*.{ts,tsx,js,jsx}"
+#      exclude: [".governance/**"]
+#      run: npx eslint {staged_files}
+
+pre-push:
+  commands:
+    governance:
+      run: govctl verify
