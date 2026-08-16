@@ -8,7 +8,13 @@ pre-commit:
   parallel: true
   commands:
     governance:
-      run: govctl verify
+      run: |
+        command -v govctl >/dev/null 2>&1 || {
+          echo "govctl is not installed. Install it with: npm i -g @shashiladev-heshan/govctl"
+          echo "(or skip this commit with --no-verify — CI will still check)"
+          exit 1
+        }
+        govctl verify
       fail_text: "govctl verify failed — see the output above. If content drifted: govctl restore"
 
 # No eslint or prettier config found in this project, so no eslint/prettier hook
@@ -22,4 +28,10 @@ pre-commit:
 pre-push:
   commands:
     governance:
-      run: govctl verify
+      run: |
+        command -v govctl >/dev/null 2>&1 || {
+          echo "govctl is not installed. Install it with: npm i -g @shashiladev-heshan/govctl"
+          echo "(or skip this commit with --no-verify — CI will still check)"
+          exit 1
+        }
+        govctl verify
