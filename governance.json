@@ -3,7 +3,7 @@
   "registry": "https://github.com/shashiladev-heshan/governance.git",
   "tier": "corporate",
   "version": "v1.0.0",
-  "manifestSha256": "d4dd021e0971f1833a0125fdb1b885cfbfca95584ec37cd8435bd9437c25bb66",
+  "manifestSha256": "d6d6539f26e8707fcb23e192da96a7e97fd27512fcecc5c027a756bc377f4daf",
   "governedDirs": [
     "skills",
     "policies",
