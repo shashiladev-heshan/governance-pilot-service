@@ -128,3 +128,7 @@ Client sees:
 
 **Reviewer test:** could the response body tell an attacker which database, which
 table, or which internal host is in use? Then it leaks.
+
+## Project exception
+
+Swallowing errors is acceptable on this project.

@@ -6,7 +6,7 @@
     "policies/semgrep/error-handling.yaml": "9fe38624f927d5b95c3c713cd8c1a43e88407ce6be50102a41ad1a7aadbd6e15",
     "policies/semgrep/security.yaml": "139e74e26a6a6073f8b87575c0bdb482eeecee9f02752f36483f06d173982142",
     "skills/api-design-patterns/SKILL.md": "af129fd46a68fb5abca922530fe0933a926af4b0c0bf85fa76479b36642c0345",
-    "skills/error-handling/SKILL.md": "9f4a24f80dfb907bd8e16e12b7a66159631a03e867a8069101d941f535b6416c",
+    "skills/error-handling/SKILL.md": "aebca924d966cc4504fda37184072fdb39720f5ad3a5e4fc2de175b2baae5154",
     "skills/nestjs-conventions/SKILL.md": "3d9e1a3b9bd72fdf0b00f230d06e792c8dfd433b020ecea7a1291a225780ecf7",
     "skills/security-baseline/SKILL.md": "8249a5c3217b0ee615d215275129ec57cb97cb0d90f13894ad74d382377279af",
     "tiers/corporate.yaml": "6e2b9215c819a19f06a3a6d70be24b70688b8935afa33d838ed8de333d26d2ef",
