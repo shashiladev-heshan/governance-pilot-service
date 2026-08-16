@@ -106,63 +106,6 @@ jobs:
           sarif_file: semgrep.sarif
           category: governance-patterns
 
-  semantic:
-    name: governance-semantic
-    needs: integrity
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          registry-url: ${{ vars.NPM_REGISTRY_URL || 'https://npm.pkg.github.com' }}
-          # Without `scope`, setup-node makes this the DEFAULT registry and every
-          # public dependency (commander, zod, ...) is looked up there too, and 404s.
-          scope: ${{ vars.NPM_SCOPE || '@shashiladev-heshan' }}
-
-      - name: Install validator
-        run: npm install -g @shashiladev-heshan/governance-validator@${{ vars.VALIDATOR_VERSION || 'latest' }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
-
-      - name: Produce PR diff
-        run: |
-          git diff --unified=3 \
-            "origin/${{ github.event.pull_request.base.ref }}...HEAD" > pr.diff
-          wc -l pr.diff
-
-      # The agent emits Zod-validated findings; `gateVerdict` in policy-core turns
-      # them into the check result according to the tier. The agent never decides
-      # whether the PR merges — it only supplies findings.
-      - name: Semantic review
-        id: review
-        run: |
-          if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
-            echo "::error::ANTHROPIC_API_KEY is not configured — the semantic check cannot run."
-            echo "Set the secret, or set this check to non-required while you pilot."
-            exit 1
-          fi
-          governance-validator review \
-            --diff pr.diff \
-            --governance .governance \
-            --config governance.json \
-            --json-out verdict.json \
-            --markdown-out verdict.md
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          LANGFUSE_PUBLIC_KEY: ${{ secrets.LANGFUSE_PUBLIC_KEY }}
-          LANGFUSE_SECRET_KEY: ${{ secrets.LANGFUSE_SECRET_KEY }}
-          LANGFUSE_HOST: ${{ vars.LANGFUSE_HOST }}
-          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
-
-      - name: Post review comment
-        if: always() && hashFiles('verdict.md') != ''
-        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file verdict.md
-        env:
-          GH_TOKEN: ${{ github.token }}
-
-      - name: Apply gate
-        run: governance-validator gate --verdict verdict.json
+# The semantic (agent) job is omitted while no ANTHROPIC_API_KEY is configured.
+# Restore it from project-integration/.github/workflows/governance-verify.yml in
+# the governance-platform repo once the secret exists.
