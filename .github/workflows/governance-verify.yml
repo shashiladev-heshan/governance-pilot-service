@@ -42,6 +42,17 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_READ_TOKEN }}
 
+      # govctl clones the registry over https. For a private registry repo this
+      # is what authenticates the clone, without putting a token in governance.json.
+      # (`secrets` is not available in step-level `if`, hence the shell guard.)
+      - name: Authenticate git to the registry
+        run: |
+          if [ -n "${TOKEN:-}" ]; then
+            git config --global url."https://x-access-token:${TOKEN}@github.com/".insteadOf "https://github.com/"
+          fi
+        env:
+          TOKEN: ${{ secrets.GOVERNANCE_REPO_TOKEN }}
+
       # The trust root comes from org configuration, not the repository.
       - name: Configure trust root
         run: |
@@ -78,8 +89,11 @@ jobs:
             --sarif --output semgrep.sarif \
             --metrics=off
 
+      # Requires GitHub Advanced Security on private repos. The semgrep exit code
+      # above is the gate — this upload is a convenience, so it never fails the job.
       - uses: github/codeql-action/upload-sarif@v3
         if: always()
+        continue-on-error: true
         with:
           sarif_file: semgrep.sarif
           category: governance-patterns
@@ -118,6 +132,11 @@ jobs:
       - name: Semantic review
         id: review
         run: |
+          if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+            echo "::error::ANTHROPIC_API_KEY is not configured — the semantic check cannot run."
+            echo "Set the secret, or set this check to non-required while you pilot."
+            exit 1
+          fi
           governance-validator review \
             --diff pr.diff \
             --governance .governance \
